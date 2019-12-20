@@ -17,6 +17,8 @@ import com.example.accessabilitylearn.Utils.AppUtil;
 
 import java.util.List;
 
+import static com.example.accessabilitylearn.Utils.AppUtil.weakUpScreen;
+
 
 //WeChat自动抢红包
 public class RedEnvelopeService extends BaseService {
@@ -42,7 +44,6 @@ public class RedEnvelopeService extends BaseService {
         if(event == null || event.getPackageName() == null){
             return;
         }
-        Log.i(TAG, "onAccessibilityEvent: " + event.getClassName());
         CurrentPackage = event.getPackageName().toString();
         switch (event.getEventType()){
             case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
@@ -52,6 +53,7 @@ public class RedEnvelopeService extends BaseService {
                     Log.i(TAG, "NotificationContent: " + ch.toString());
                     AppUtil.makeToast("Msg: " + ch.toString());
                     if(ch.toString().contains("[微信红包]")){
+                        weakUpScreen();
                         gotoWeChat(event);
                         Log.i(TAG, "Get Red Envelope!");
                     }
@@ -112,25 +114,13 @@ public class RedEnvelopeService extends BaseService {
         Log.i(TAG, "openRedEnvelope: fakeClick");
         float x = MainActivity.Width / 2.0F;
         float y = MainActivity.Height * 2 / 3.0F;
-        for(int i = 0; i < 20; i++){
+        for(int i = 0; i < 10; i++){
             SystemClock.sleep(17);
             fakeClick(x, y);
         }
         SystemClock.sleep(500);
         globalGoHome();
     }
-
-    private void goClick(AccessibilityNodeInfo nodeInfo){
-        if(nodeInfo == null) return;
-        while (nodeInfo != null){
-            if(nodeInfo.isClickable()){
-                nodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                break;
-            }
-            nodeInfo = nodeInfo.getParent();
-        }
-    }
-
 
     private void gotoWeChat(AccessibilityEvent event){
         Parcelable data = event.getParcelableData();

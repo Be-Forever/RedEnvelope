@@ -4,11 +4,9 @@ import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.GestureDescription;
 import android.annotation.TargetApi;
 import android.graphics.Path;
-import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityNodeInfo;
 
-import com.example.accessabilitylearn.Constants;
-import com.example.accessabilitylearn.MainActivity;
 
 public class BaseService extends AccessibilityService {
 
@@ -34,7 +32,6 @@ public class BaseService extends AccessibilityService {
     //输入x, y坐标模拟点击事件
     @TargetApi(android.os.Build.VERSION_CODES.N)
     public void fakeClick(float x, float y){
-        Log.i(Constants.TAG, "x, y = " + x + ", " + y);
         Path path = new Path();
         path.moveTo(x, y);
         GestureDescription.Builder builder = new GestureDescription.Builder();
@@ -44,13 +41,25 @@ public class BaseService extends AccessibilityService {
             @Override
             public void onCompleted(GestureDescription gestureDescription) {
                 super.onCompleted(gestureDescription);
-                Log.i(Constants.TAG, "onCompleted: completed");
+                //Log.i(Constants.TAG, "onCompleted: completed");
             }
             @Override
             public void onCancelled(GestureDescription gestureDescription) {
                 super.onCancelled(gestureDescription);
-                Log.i(Constants.TAG, "onCancelled: cancelled");
+                //Log.i(Constants.TAG, "onCancelled: cancelled");
             }
         }, null);
+    }
+
+    //对某个节点进行点击
+    public void goClick(AccessibilityNodeInfo nodeInfo){
+        if(nodeInfo == null) return;
+        while (nodeInfo != null){
+            if(nodeInfo.isClickable()){
+                nodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                break;
+            }
+            nodeInfo = nodeInfo.getParent();
+        }
     }
 }

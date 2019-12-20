@@ -1,7 +1,10 @@
 package com.example.accessabilitylearn.Utils;
 
+import android.annotation.SuppressLint;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.PowerManager;
 import android.widget.Toast;
 
 import com.example.accessabilitylearn.MainActivity;
@@ -16,6 +19,19 @@ public class AppUtil {
             e.printStackTrace();
         }
         return "";
+    }
+
+    @SuppressLint("InvalidWakeLockTag")
+    public static void weakUpScreen(){
+        PowerManager pm = (PowerManager)MainActivity.AppContext.getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "WakeLock");
+        wakeLock.acquire();
+        wakeLock.release();
+
+        KeyguardManager km = (KeyguardManager) MainActivity.AppContext.getSystemService(Context.KEYGUARD_SERVICE);
+        KeyguardManager.KeyguardLock lock = km.newKeyguardLock("unlock");
+        lock.disableKeyguard();
+
     }
 
     public static void makeToast(String text){
