@@ -1,8 +1,10 @@
 package com.example.accessabilitylearn.utils;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.PowerManager;
 import android.widget.Toast;
@@ -36,6 +38,18 @@ public class AppUtil {
 
     public static void makeToast(String text){
         Toast.makeText(MainActivity.AppContext, text, Toast.LENGTH_SHORT).show();
+    }
+
+    //获取版本号
+    public static String getAppVersion(Context context){
+        PackageManager packageManager = context.getPackageManager();
+        PackageInfo info = null;
+        try {
+            info = packageManager.getPackageInfo(context.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return info.versionName;
     }
 
 }
