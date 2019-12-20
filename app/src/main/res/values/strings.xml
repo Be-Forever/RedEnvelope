@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Accessibility-RedEnvelope</string>
+    <string name="accessibility_desc">help to monitor weChat</string>
+    <string name="tips">应用需打开"无障碍服务"才能运行</string>
+</resources>
