@@ -53,7 +53,7 @@ public class RedEnvelopeService extends BaseService {
                     AppUtil.makeToast("Msg: " + ch.toString());
                     if(ch.toString().contains("[微信红包]")){
                         weakUpScreen();
-                        gotoWeChat(event);
+                        gotoApp(event);
                         Log.i(Constants.TAG, "Get Red Envelope!");
                     }
                 }
@@ -120,21 +120,4 @@ public class RedEnvelopeService extends BaseService {
         SystemClock.sleep(500);
         globalGoHome();
     }
-
-    private void gotoWeChat(AccessibilityEvent event){
-        Parcelable data = event.getParcelableData();
-        if(data != null && data instanceof Notification){
-            Notification notification = (Notification) data;
-            PendingIntent intent = notification.contentIntent;
-            try {
-                intent.send();
-            } catch (PendingIntent.CanceledException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-
-
 }

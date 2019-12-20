@@ -3,7 +3,10 @@ package com.example.accessabilitylearn.service;
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.GestureDescription;
 import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.graphics.Path;
+import android.os.Parcelable;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
@@ -60,6 +63,21 @@ public class BaseService extends AccessibilityService {
                 break;
             }
             nodeInfo = nodeInfo.getParent();
+        }
+    }
+
+
+    //通知栏事件进入应用
+    public void gotoApp(AccessibilityEvent event){
+        Parcelable data = event.getParcelableData();
+        if(data != null && data instanceof Notification){
+            Notification notification = (Notification) data;
+            PendingIntent intent = notification.contentIntent;
+            try {
+                intent.send();
+            } catch (PendingIntent.CanceledException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
