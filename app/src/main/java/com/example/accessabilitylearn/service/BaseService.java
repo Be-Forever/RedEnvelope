@@ -1,4 +1,4 @@
-package com.example.accessabilitylearn.Service;
+package com.example.accessabilitylearn.service;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.GestureDescription;

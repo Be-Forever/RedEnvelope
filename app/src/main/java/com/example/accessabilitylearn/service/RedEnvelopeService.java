@@ -1,4 +1,4 @@
-package com.example.accessabilitylearn.Service;
+package com.example.accessabilitylearn.service;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -11,19 +11,18 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.accessabilitylearn.Constants;
 import com.example.accessabilitylearn.MainActivity;
-import com.example.accessabilitylearn.Utils.AppUtil;
+import com.example.accessabilitylearn.utils.AppUtil;
 
 
 import java.util.List;
 
-import static com.example.accessabilitylearn.Utils.AppUtil.weakUpScreen;
+import static com.example.accessabilitylearn.utils.AppUtil.weakUpScreen;
 
 
 //WeChat自动抢红包
 public class RedEnvelopeService extends BaseService {
-    private final String TAG = "Accessibility";
-
     private static String MainUi = "com.tencent.mm.ui.LauncherUI";
 
     private static String LuckMoneyUi = "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyNotHookReceiveUI";
@@ -33,7 +32,7 @@ public class RedEnvelopeService extends BaseService {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
-        Log.i(TAG, "onServiceConnected");
+        Log.i(Constants.TAG, "onServiceConnected");
         AppUtil.makeToast("初始化成功");
     }
 
@@ -47,15 +46,15 @@ public class RedEnvelopeService extends BaseService {
         CurrentPackage = event.getPackageName().toString();
         switch (event.getEventType()){
             case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
-                Log.i(TAG, "CurrentPackage: " + CurrentPackage);
+                Log.i(Constants.TAG, "CurrentPackage: " + CurrentPackage);
                 List<CharSequence> texts = event.getText();
                 for(CharSequence ch : texts){
-                    Log.i(TAG, "NotificationContent: " + ch.toString());
+                    Log.i(Constants.TAG, "NotificationContent: " + ch.toString());
                     AppUtil.makeToast("Msg: " + ch.toString());
                     if(ch.toString().contains("[微信红包]")){
                         weakUpScreen();
                         gotoWeChat(event);
-                        Log.i(TAG, "Get Red Envelope!");
+                        Log.i(Constants.TAG, "Get Red Envelope!");
                     }
                 }
                 break;
@@ -83,7 +82,7 @@ public class RedEnvelopeService extends BaseService {
 
     @Override
     public void onInterrupt() {
-        Log.i(TAG, "onInterrupt");
+        Log.i(Constants.TAG, "onInterrupt");
     }
 
     private void getRealEnvelope(List<AccessibilityNodeInfo> list){
@@ -108,10 +107,10 @@ public class RedEnvelopeService extends BaseService {
     //开启红包
     private void openRedEnvelope(AccessibilityNodeInfo node){
         if(node == null) {
-            Log.i(TAG, "node = null");
+            Log.i(Constants.TAG, "node = null");
         }
         SystemClock.sleep(50);
-        Log.i(TAG, "openRedEnvelope: fakeClick");
+        Log.i(Constants.TAG, "openRedEnvelope: fakeClick");
         float x = MainActivity.Width / 2.0F;
         float y = MainActivity.Height * 2 / 3.0F;
         for(int i = 0; i < 10; i++){

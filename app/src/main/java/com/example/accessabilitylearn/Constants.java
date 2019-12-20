@@ -1,14 +1,11 @@
 package com.example.accessabilitylearn;
 
-import android.content.Context;
-import android.widget.Toast;
 
-import com.example.accessabilitylearn.Utils.AppUtil;
+import com.example.accessabilitylearn.utils.AppUtil;
 
 public class Constants {
     public static String Version = "";
     public static String Package = "com.tencent.mm";
-    public static Context BaseContext;
     public static String TAG = "Accessibility";
 
     public static void setArgs(String version){

@@ -1,4 +1,4 @@
-package com.example.accessabilitylearn.Utils;
+package com.example.accessabilitylearn.utils;
 
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
@@ -37,4 +37,5 @@ public class AppUtil {
     public static void makeToast(String text){
         Toast.makeText(MainActivity.AppContext, text, Toast.LENGTH_SHORT).show();
     }
+
 }

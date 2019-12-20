@@ -12,16 +12,18 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
-import com.example.accessabilitylearn.Service.RedEnvelopeService;
+import com.example.accessabilitylearn.service.RedEnvelopeService;
 
 public class MainActivity extends AppCompatActivity {
-    private final String TAG = "Accessibility";
-
     public static Context AppContext;
     public static int Width;
     public static int Height;
+    private Switch AutoWeChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +31,42 @@ public class MainActivity extends AppCompatActivity {
         AppContext = this;
         initScreen();
         setContentView(R.layout.activity_main);
-        try {
-            Constants.BaseContext = this.createPackageContext(Constants.Package, Context.CONTEXT_IGNORE_SECURITY);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        init();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        freshSwitch();-
+    }
+
+
+    private void init(){
+        AutoWeChat = findViewById(R.id.open_we_chat);
+        freshSwitch();
+        AutoWeChat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.i(Constants.TAG, "onCheckedChanged: " + isChecked);
+                if(isChecked){
+                    if(!isAccessibilitySettingOn(RedEnvelopeService.class.getCanonicalName(), AppContext)){
+                        openAccessibility();
+                    }
+                }else {
+                    if(isAccessibilitySettingOn(RedEnvelopeService.class.getCanonicalName(), AppContext)){
+                        openAccessibility();
+                    }
+                }
+            }
+        });
+    }
+
+    private void freshSwitch(){
+        if(isAccessibilitySettingOn(RedEnvelopeService.class.getCanonicalName(), MainActivity.this)){
+            AutoWeChat.setChecked(true);
+        }else {
+            AutoWeChat.setChecked(false);
         }
-        openAccessibility(RedEnvelopeService.class.getCanonicalName(), this);
     }
 
     private boolean isAccessibilitySettingOn(String accessibilityServiceName, Context context){
@@ -53,33 +85,34 @@ public class MainActivity extends AppCompatActivity {
                 while(stringSplitter.hasNext()){
                     String accessibilityService = stringSplitter.next();
                     if(accessibilityService.equals(serviceName)){
-                        Log.i(TAG, "serviceName: " + serviceName + "isAccessibilitySettingOn->true");
                         return true;
                     }
                 }
             }
-        }else {
-            Log.i(TAG, "serviceName: " + serviceName + "---isAccessibilitySettingOn->false");
         }
         return false;
     }
 
-    private void openAccessibility(String name, Context context){
-        if(!isAccessibilitySettingOn(name, context)){
-            DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                    startActivity(intent);
-                }
-            };
-            AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setMessage(R.string.tips)
-                    .setNegativeButton("取消", null)
-                    .setPositiveButton("确定", listener)
-                    .create();
-            dialog.show();
-        }
+    private void openAccessibility(){
+        DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                startActivity(intent);
+            }
+        };
+        DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                freshSwitch();
+            }
+        };
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.tips)
+                .setNegativeButton("取消", cancelListener)
+                .setPositiveButton("确定", clickListener)
+                .create();
+        dialog.show();
     }
 
     private void initScreen(){
