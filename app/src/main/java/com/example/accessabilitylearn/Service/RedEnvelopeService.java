@@ -1,11 +1,7 @@
-package com.example.accessabilitylearn;
+package com.example.accessabilitylearn.Service;
 
-import android.accessibilityservice.AccessibilityService;
-import android.accessibilityservice.GestureDescription;
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.graphics.Path;
 import android.os.Build;
 import android.os.Parcelable;
 import android.os.SystemClock;
@@ -15,12 +11,15 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.accessabilitylearn.MainActivity;
 import com.example.accessabilitylearn.Utils.AppUtil;
 
 
 import java.util.List;
 
-public class ClickService extends AccessibilityService {
+
+//WeChat自动抢红包
+public class RedEnvelopeService extends BaseService {
     private final String TAG = "Accessibility";
 
     private static String MainUi = "com.tencent.mm.ui.LauncherUI";
@@ -33,13 +32,10 @@ public class ClickService extends AccessibilityService {
     protected void onServiceConnected() {
         super.onServiceConnected();
         Log.i(TAG, "onServiceConnected");
-//        Constants.Version = AppUtil.getVersion(Constants.BaseContext, Constants.Package);
-//        Log.i(TAG, "WeCharVersion: " + Constants.Version);
-//        Constants.setArgs(Constants.Version);
+        AppUtil.makeToast("初始化成功");
     }
 
 
-    int i = 0;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -114,9 +110,11 @@ public class ClickService extends AccessibilityService {
         }
         SystemClock.sleep(50);
         Log.i(TAG, "openRedEnvelope: fakeClick");
+        float x = MainActivity.Width / 2.0F;
+        float y = MainActivity.Height * 2 / 3.0F;
         for(int i = 0; i < 20; i++){
             SystemClock.sleep(17);
-            fakeClick();
+            fakeClick(x, y);
         }
         SystemClock.sleep(500);
         globalGoHome();
@@ -147,37 +145,7 @@ public class ClickService extends AccessibilityService {
         }
     }
 
-    private void globalGoBack(){
-        performGlobalAction(GLOBAL_ACTION_BACK);
-    }
-
-    private void globalGoHome(){
-        performGlobalAction(GLOBAL_ACTION_HOME);
-    }
 
 
-    @TargetApi(android.os.Build.VERSION_CODES.N)
-    private void fakeClick(){
-        float x = MainActivity.Width / 2.0F;
-        float y = MainActivity.Height * 2 / 3.0F;
-        Log.i(TAG, "x, y = " + x + ", " + y);
-        Path path = new Path();
-        path.moveTo(x, y);
-        GestureDescription.Builder builder = new GestureDescription.Builder();
-        builder.addStroke(new GestureDescription.StrokeDescription(path, 0, 1));
-        GestureDescription gestureDescription = builder.build();
-        dispatchGesture(gestureDescription, new GestureResultCallback() {
-            @Override
-            public void onCompleted(GestureDescription gestureDescription) {
-                super.onCompleted(gestureDescription);
-                Log.i(TAG, "onCompleted: completed");
-            }
-            @Override
-            public void onCancelled(GestureDescription gestureDescription) {
-                super.onCancelled(gestureDescription);
-                Log.i(TAG, "onCancelled: cancelled");
-            }
-        }, null);
-    }
 
 }

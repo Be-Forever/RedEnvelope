@@ -3,20 +3,18 @@ package com.example.accessabilitylearn;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.WindowManager;
-import android.widget.Toast;
+
+import com.example.accessabilitylearn.Service.RedEnvelopeService;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "Accessibility";
@@ -36,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        openAccessibility(ClickService.class.getCanonicalName(), this);
+        openAccessibility(RedEnvelopeService.class.getCanonicalName(), this);
     }
 
     private boolean isAccessibilitySettingOn(String accessibilityServiceName, Context context){
@@ -90,27 +88,5 @@ public class MainActivity extends AppCompatActivity {
         manager.getDefaultDisplay().getMetrics(metrics);
         Width = metrics.widthPixels;
         Height = metrics.heightPixels;
-    }
-
-    //获取正确的屏幕高度
-    public static int getRealHeight(Context context) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        int screenHeight = 0;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            DisplayMetrics dm = new DisplayMetrics();
-            display.getRealMetrics(dm);
-            screenHeight = dm.heightPixels;
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            try {
-                screenHeight = (Integer) Display.class.getMethod("getRawHeight").invoke(display);
-            } catch (Exception e) {
-                DisplayMetrics dm = new DisplayMetrics();
-                display.getMetrics(dm);
-                screenHeight = dm.heightPixels;
-            }
-        }
-        return screenHeight;
     }
 }
