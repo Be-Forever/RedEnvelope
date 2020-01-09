@@ -1,7 +1,6 @@
 package com.example.accessabilitylearn.utils;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -9,7 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.PowerManager;
 import android.widget.Toast;
 
-import com.example.accessabilitylearn.MainActivity;
+import com.example.accessabilitylearn.activities.MainActivity;
 
 public class AppUtil {
 
@@ -33,7 +32,6 @@ public class AppUtil {
         KeyguardManager km = (KeyguardManager) MainActivity.AppContext.getSystemService(Context.KEYGUARD_SERVICE);
         KeyguardManager.KeyguardLock lock = km.newKeyguardLock("unlock");
         lock.disableKeyguard();
-
     }
 
     public static void makeToast(String text){
@@ -50,6 +48,17 @@ public class AppUtil {
             e.printStackTrace();
         }
         return info.versionName;
+    }
+
+    //创建context
+    public static Context getContext(Context t, String packageName){
+        Context context = null;
+        try {
+            context = t.createPackageContext(packageName, Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return context;
     }
 
 }
