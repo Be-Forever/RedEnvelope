@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initList(){
         if(Constants.FriendList == null) return;
         System.out.println(Constants.FriendList);
-        FriendList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Constants.FriendList));
+        FriendList.setAdapter(new ArrayAdapter<>(this, R.layout.spinner_item, Constants.FriendList));
         FriendList.setOnItemSelectedListener(this);
     }
 

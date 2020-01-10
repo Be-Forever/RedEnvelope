@@ -55,7 +55,6 @@ public class AutoRedEnvelope {
                     AccessibilityNodeInfo nodeInfo = event.getSource();
                     List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("微信红包");
                     if(list != null && list.size() > 0){
-                        //getRealEnvelope(list);
                         AccessibilityUtil.performClick(list.get(list.size() - 1));
                     }
 
