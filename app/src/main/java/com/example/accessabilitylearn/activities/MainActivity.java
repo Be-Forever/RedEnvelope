@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 System.out.println("click");
                 SendMessage.NAME = ToWho.getText().toString();
                 SendMessage.CONTENT = WhatMsg.getText().toString();
+                Constants.CurrentTask = Constants.AutoSendMsgType;
                 Intent intent = new Intent();
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setClassName(Constants.WeChatInfo.WECHAT_PACKAGE, Constants.WeChatInfo.WECHAT_LAUNCHER_UI);
@@ -185,7 +186,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             AutoWeChat.setChecked(false);
                         }
                         if(s.isChecked()) SendMsgDetail.setVisibility(View.VISIBLE);
-                        Constants.CurrentTask = Constants.AutoSendMsgType;
                     } else {
                         SendMsgDetail.setVisibility(View.GONE);
                         Constants.CurrentTask = -1;

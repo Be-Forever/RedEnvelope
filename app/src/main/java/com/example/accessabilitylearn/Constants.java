@@ -53,6 +53,7 @@ public class Constants {
                 WeChatInfo.ID_EDIT_VIEW = "com.tencent.mm:id/aom";
                 WeChatInfo.ID_CONTACT_LIST = "com.tencent.mm:id/nn";
                 WeChatInfo.ID_CONTACTOR_TEXT = "com.tencent.mm:id/ol";
+                WeChatInfo.ID_SEND_BTN = "com.tencent.mm:id/aot";
                 break;
             case "7.0.10":
                 WeChatInfo.ID_CHATTING_NAME = "com.tencent.mm:id/lt";

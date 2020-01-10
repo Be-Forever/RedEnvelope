@@ -9,7 +9,6 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.example.accessabilitylearn.Constants;
-import com.example.accessabilitylearn.activities.MainActivity;
 import com.example.accessabilitylearn.utils.AccessibilityUtil;
 import com.example.accessabilitylearn.utils.AppUtil;
 
@@ -94,7 +93,6 @@ public class SendMessage {
             while (true){
                 List<AccessibilityNodeInfo> users = nodeInfo.findAccessibilityNodeInfosByViewId(Constants.WeChatInfo.ID_CONTACTOR_TEXT);
                 if(users != null && !users.isEmpty()){
-                    System.out.println(users.size());
                     for(int i = 0; i < users.size(); i++){
                         AccessibilityNodeInfo node = users.get(i);
                         String name = node.getText().toString();
@@ -137,7 +135,6 @@ public class SendMessage {
     public void resetApp(){
         ActivityManager manager = (ActivityManager) CurrentService.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> taskInfos = manager.getRunningTasks(3);
-        System.out.println(taskInfos.size());
         for(ActivityManager.RunningTaskInfo info : taskInfos){
             if(CurrentService.getPackageName().equals(info.topActivity.getPackageName())){
                 manager.moveTaskToFront(info.id, ActivityManager.MOVE_TASK_WITH_HOME);
