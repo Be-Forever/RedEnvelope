@@ -3,12 +3,16 @@ package com.example.accessabilitylearn;
 
 import com.example.accessabilitylearn.utils.AppUtil;
 
+import java.util.List;
+
 public class Constants {
     public static String Version = "";
     public static boolean IsOver = false;
     public static int CurrentTask = -1;
     public static final int RedEnvelopeType = 1000;
     public static final int AutoSendMsgType = 1001;
+    public static final int InitFriendList = 1002;
+    public static List<String> FriendList;
     public static final String TAG = "Accessibility";
 
     public static class WeChatInfo{

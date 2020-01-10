@@ -15,40 +15,32 @@ import com.example.accessabilitylearn.utils.AppUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SendMessage {
-    public static String NAME;
-    public static String CONTENT;
-    private static AccessibilityService CurrentService;
-    private static SendMessage mInstance;
+public class InitFriendList {
 
-    private SendMessage(AccessibilityService service){
+    private static AccessibilityService CurrentService;
+    private static InitFriendList mInstance;
+
+    private InitFriendList(AccessibilityService service){
         CurrentService = service;
     }
 
-    public static SendMessage getInstance(AccessibilityService service){
+    public static InitFriendList getInstance(AccessibilityService service){
         if(mInstance == null){
-            synchronized (SendMessage.class){
+            synchronized (InitFriendList.class){
                 if(mInstance == null){
-                    mInstance = new SendMessage(service);
+                    mInstance = new InitFriendList(service);
                 }
             }
         }
         return mInstance;
     }
 
-    public void startSedMessage(AccessibilityEvent event){
+    public void initList(AccessibilityEvent event){
         String currentActivity = event.getClassName().toString();
-        Log.i(Constants.TAG, "startSedMessage: " + currentActivity);
+        Log.i(Constants.TAG, "initList: " + currentActivity);
         switch (currentActivity){
             case Constants.WeChatInfo.WECHAT_LAUNCHER_UI:
                 headToContactUI();
-                break;
-            case "android.widget.LinearLayout":
-            case Constants.WeChatInfo.TALKING_UI:
-                sendMsg();
-                break;
-            case Constants.WeChatInfo.WECHAT_CLASS_CONTACT_INFO_UI:
-                headToChattingUi();
                 break;
             default:
                 AppUtil.makeToast("请回到主界面");
@@ -56,34 +48,21 @@ public class SendMessage {
     }
 
     private void headToContactUI(){
-        if(!AccessibilityUtil.findTextAndClick(CurrentService,"通讯录")){
-            String talker = AccessibilityUtil.findTextById(CurrentService, Constants.WeChatInfo.ID_CHATTING_NAME);
-            if(talker.equals(NAME)){
-                sendMsg();
-            }else {
-                AccessibilityUtil.globalGoBack(CurrentService);
-                freshContactUI();
-            }
-        }else {
-            freshContactUI();
+        if(!AccessibilityUtil.findTextAndClick(CurrentService,"通讯录")) {
+            AccessibilityUtil.globalGoBack(CurrentService);
         }
+        freshContactUI();
+        getList();
+        resetApp();
     }
 
     private void freshContactUI(){
         AccessibilityUtil.findTextAndClick(CurrentService,"通讯录");
         SystemClock.sleep(500);
         AccessibilityUtil.findTextAndClick(CurrentService,"通讯录");
-        AccessibilityNodeInfo node = findTalker();
-        if(node != null){
-            AccessibilityUtil.performClick(node);
-        }
     }
 
-    private void headToChattingUi(){
-        AccessibilityUtil.findTextAndClick(CurrentService, "发消息");
-    }
-
-    private AccessibilityNodeInfo findTalker(){
+    private void getList(){
         AccessibilityNodeInfo nodeInfo = CurrentService.getRootInActiveWindow();
         List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByViewId(Constants.WeChatInfo.ID_CONTACT_LIST);
         if(list != null && !list.isEmpty()){
@@ -94,13 +73,13 @@ public class SendMessage {
                     for(int i = 0; i < users.size(); i++){
                         AccessibilityNodeInfo node = users.get(i);
                         String name = node.getText().toString();
-                        if(name.equals(NAME)) return node;
                         if(!userList.contains(name)){
                             userList.add(name);
                         }else{
                             if(i == users.size() - 1){
-                                AppUtil.makeToast("未找到联系人");
-                                return null;
+                                AppUtil.makeToast("扫描完毕");
+                                Constants.FriendList = userList;
+                                return;
                             }
                         }
                     }
@@ -110,25 +89,8 @@ public class SendMessage {
             }
 
         }
-        return null;
     }
 
-    private void sendMsg(){
-        String talker = AccessibilityUtil.findTextById(CurrentService, Constants.WeChatInfo.ID_CHATTING_NAME);
-        if(talker != null && talker.equals(NAME)){
-            if(!AccessibilityUtil.findIdAndWrite(CurrentService, Constants.WeChatInfo.ID_EDIT_VIEW, CONTENT)){
-                AccessibilityUtil.findAndClickById(CurrentService, Constants.WeChatInfo.ID_VOICE_BTN);
-                AccessibilityUtil.findIdAndWrite(CurrentService, Constants.WeChatInfo.ID_EDIT_VIEW, CONTENT);
-            }
-            AccessibilityUtil.findAndClickById(CurrentService, Constants.WeChatInfo.ID_SEND_BTN);
-            resetApp();
-            Constants.CurrentTask = -1;
-            Constants.IsOver = true;
-        }else {
-            AccessibilityUtil.globalGoBack(CurrentService);
-            freshContactUI();
-        }
-    }
 
     public void resetApp(){
         ActivityManager manager = (ActivityManager) CurrentService.getSystemService(Context.ACTIVITY_SERVICE);

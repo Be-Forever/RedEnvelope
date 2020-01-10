@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi;
 
 import com.example.accessabilitylearn.Constants;
 import com.example.accessabilitylearn.service.utils.AutoRedEnvelope;
+import com.example.accessabilitylearn.service.utils.InitFriendList;
 import com.example.accessabilitylearn.service.utils.SendMessage;
 import com.example.accessabilitylearn.utils.AccessibilityUtil;
 import com.example.accessabilitylearn.utils.AppUtil;
@@ -35,7 +36,10 @@ public class RedEnvelopeService extends AccessibilityService {
                     AutoRedEnvelope.getInstance(this).startEnvelope(event);
                     break;
                 case Constants.AutoSendMsgType:
-                    SendMessage.getInstance().startSedMessage(this, event);
+                    SendMessage.getInstance(this).startSedMessage(event);
+                    break;
+                case Constants.InitFriendList:
+                    InitFriendList.getInstance(this).initList(event);
                     break;
             }
         }

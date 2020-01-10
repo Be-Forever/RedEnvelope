@@ -14,10 +14,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -27,7 +31,7 @@ import com.example.accessabilitylearn.service.utils.SendMessage;
 import com.example.accessabilitylearn.service.RedEnvelopeService;
 import com.example.accessabilitylearn.utils.AppUtil;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     public static Context AppContext;
     public static Context WeChatContext;
     public static int Width;
@@ -43,6 +47,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText WhatMsg;
     private Button SendMsgBtn;
 
+    private Button InitFriend;
+    private Spinner FriendList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
         freshOpenServiceSwitch(RedEnvelopeService.class, OpenService);
+        initList();
     }
 
     private void initWeChatVersion(){
@@ -85,6 +93,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         WhatMsg = findViewById(R.id.send_msg);
         SendMsgBtn = findViewById(R.id.send_WeChat);
         SendMsgBtn.setOnClickListener(this);
+
+        InitFriend = findViewById(R.id.init_friend_btn);
+        InitFriend.setOnClickListener(this);
+        FriendList = findViewById(R.id.friend_list);
     }
 
     @Override
@@ -95,11 +107,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SendMessage.NAME = ToWho.getText().toString();
                 SendMessage.CONTENT = WhatMsg.getText().toString();
                 Constants.CurrentTask = Constants.AutoSendMsgType;
-                Intent intent = new Intent();
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setClassName(Constants.WeChatInfo.WECHAT_PACKAGE, Constants.WeChatInfo.WECHAT_LAUNCHER_UI);
-                startActivity(intent);
+                gotoWeChat();
+                break;
+            case R.id.init_friend_btn:
+                Constants.CurrentTask = Constants.InitFriendList;
+                gotoWeChat();
+                break;
         }
+    }
+
+    private void gotoWeChat(){
+        Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setClassName(Constants.WeChatInfo.WECHAT_PACKAGE, Constants.WeChatInfo.WECHAT_LAUNCHER_UI);
+        startActivity(intent);
+    }
+
+    private void initList(){
+        if(Constants.FriendList == null) return;
+        System.out.println(Constants.FriendList);
+        FriendList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Constants.FriendList));
+        FriendList.setOnItemSelectedListener(this);
+    }
+
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        System.out.println(Constants.FriendList.get(position));
+        ToWho.setText(Constants.FriendList.get(position));
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     private void setOpenServiceListener(final Class clazz, Switch s){
@@ -160,6 +200,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void freshSwitch(Switch s){
         if(OpenService.isChecked()) {
+            if(Constants.CurrentTask == Constants.InitFriendList){
+                Constants.CurrentTask = -1;
+            }
             switch (s.getId()){
                 case R.id.open_we_chat:
                     if(s.isChecked()){
