@@ -9,6 +9,6 @@ Accessibility-安卓无障碍功能开发（如下两个功能互斥）
     
     
 
-![image](http://github.com/BeForerver/RedEnvelope/imgs/1.png)
-![image](http://github.com/BeForerver/RedEnvelope/imgs/2.png)
+![image](https://github.com/BeForerver/RedEnvelope/blob/master/imgs/1.png)
+![image](https://github.com/BeForerver/RedEnvelope/blob/master/imgs/2.png)
 
