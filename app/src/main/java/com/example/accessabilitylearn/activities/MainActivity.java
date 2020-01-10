@@ -228,7 +228,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }else if(AutoWeChat.isChecked()){
                             AutoWeChat.setChecked(false);
                         }
-                        if(s.isChecked()) SendMsgDetail.setVisibility(View.VISIBLE);
+                        if(s.isChecked()) {
+                            SendMsgDetail.setVisibility(View.GONE);
+                            SendMsgDetail.setVisibility(View.VISIBLE);
+                        }
                     } else {
                         SendMsgDetail.setVisibility(View.GONE);
                         Constants.CurrentTask = -1;
