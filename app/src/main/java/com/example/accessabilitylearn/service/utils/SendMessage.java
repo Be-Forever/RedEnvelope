@@ -73,6 +73,7 @@ public class SendMessage {
         AccessibilityUtil.findTextAndClick(CurrentService,"通讯录");
         SystemClock.sleep(300);
         AccessibilityUtil.findTextAndClick(CurrentService,"通讯录");
+        SystemClock.sleep(300);
         AccessibilityNodeInfo node = findTalker();
         if(node != null){
             AccessibilityUtil.performClick(node);
