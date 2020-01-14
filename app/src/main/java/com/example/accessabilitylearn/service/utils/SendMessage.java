@@ -71,7 +71,7 @@ public class SendMessage {
 
     private void freshContactUI(){
         AccessibilityUtil.findTextAndClick(CurrentService,"通讯录");
-        SystemClock.sleep(500);
+        SystemClock.sleep(300);
         AccessibilityUtil.findTextAndClick(CurrentService,"通讯录");
         AccessibilityNodeInfo node = findTalker();
         if(node != null){
@@ -105,7 +105,7 @@ public class SendMessage {
                         }
                     }
                     list.get(0).performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
-                    SystemClock.sleep(500);
+                    SystemClock.sleep(300);
                 }
             }
 
