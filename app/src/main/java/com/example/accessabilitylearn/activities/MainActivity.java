@@ -81,13 +81,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initScreen();
         initVersion();
         SendMsgDetail = findViewById(R.id.send_msg_detail);
+        SendMsgDetail.clearAnimation();
         OpenService = findViewById(R.id.open_accessibility);
         setOpenServiceListener(RedEnvelopeService.class, OpenService);
         AutoWeChat = findViewById(R.id.open_we_chat);
         setSwitchListener(AutoWeChat);
         AutoSendMsg = findViewById(R.id.auto_send_msg);
         setSwitchListener(AutoSendMsg);
-        freshOpenServiceSwitch(RedEnvelopeService.class, OpenService);
+        //freshOpenServiceSwitch(RedEnvelopeService.class, OpenService);
 
         ToWho = findViewById(R.id.send_name);
         WhatMsg = findViewById(R.id.send_msg);
@@ -229,7 +230,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             AutoWeChat.setChecked(false);
                         }
                         if(s.isChecked()) {
-                            SendMsgDetail.setVisibility(View.GONE);
                             SendMsgDetail.setVisibility(View.VISIBLE);
                         }
                     } else {
